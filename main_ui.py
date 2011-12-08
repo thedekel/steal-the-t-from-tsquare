@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main.ui'
 #
-# Created: Thu Dec  8 03:49:11 2011
+# Created: Thu Dec  8 05:51:05 2011
 #      by: PyQt4 UI code generator 4.8.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -143,26 +143,44 @@ class Ui_ETMITM(object):
         self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
         self.tab = QtGui.QWidget()
         self.tab.setObjectName(_fromUtf8("tab"))
-        self.textBrowser = QtGui.QTextBrowser(self.tab)
-        self.textBrowser.setGeometry(QtCore.QRect(0, 0, 851, 251))
-        self.textBrowser.setHtml(QtGui.QApplication.translate("ETMITM", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Main Log</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
+        self.plainTextEdit = QtGui.QPlainTextEdit(self.tab)
+        self.plainTextEdit.setGeometry(QtCore.QRect(0, 0, 851, 251))
+        self.plainTextEdit.setPlainText(_fromUtf8(""))
+        self.plainTextEdit.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
+        self.plainTextEdit.setObjectName(_fromUtf8("plainTextEdit"))
         self.tabWidget.addTab(self.tab, _fromUtf8(""))
         self.tab_2 = QtGui.QWidget()
         self.tab_2.setObjectName(_fromUtf8("tab_2"))
-        self.textBrowser_2 = QtGui.QTextBrowser(self.tab_2)
-        self.textBrowser_2.setGeometry(QtCore.QRect(0, 0, 851, 251))
-        self.textBrowser_2.setHtml(QtGui.QApplication.translate("ETMITM", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Ettercup Log</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.textBrowser_2.setObjectName(_fromUtf8("textBrowser_2"))
+        self.plainTextEdit_2 = QtGui.QPlainTextEdit(self.tab_2)
+        self.plainTextEdit_2.setGeometry(QtCore.QRect(0, 0, 851, 251))
+        self.plainTextEdit_2.setPlainText(_fromUtf8(""))
+        self.plainTextEdit_2.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
+        self.plainTextEdit_2.setObjectName(_fromUtf8("plainTextEdit_2"))
         self.tabWidget.addTab(self.tab_2, _fromUtf8(""))
+        self.urlsnarf = QtGui.QWidget()
+        self.urlsnarf.setObjectName(_fromUtf8("urlsnarf"))
+        self.plainTextEdit_3 = QtGui.QPlainTextEdit(self.urlsnarf)
+        self.plainTextEdit_3.setGeometry(QtCore.QRect(0, 0, 851, 251))
+        self.plainTextEdit_3.setPlainText(_fromUtf8(""))
+        self.plainTextEdit_3.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
+        self.plainTextEdit_3.setObjectName(_fromUtf8("plainTextEdit_3"))
+        self.tabWidget.addTab(self.urlsnarf, _fromUtf8(""))
+        self.tab_4 = QtGui.QWidget()
+        self.tab_4.setObjectName(_fromUtf8("tab_4"))
+        self.plainTextEdit_4 = QtGui.QPlainTextEdit(self.tab_4)
+        self.plainTextEdit_4.setGeometry(QtCore.QRect(0, 0, 851, 251))
+        self.plainTextEdit_4.setPlainText(_fromUtf8(""))
+        self.plainTextEdit_4.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
+        self.plainTextEdit_4.setObjectName(_fromUtf8("plainTextEdit_4"))
+        self.tabWidget.addTab(self.tab_4, _fromUtf8(""))
+        self.tab_5 = QtGui.QWidget()
+        self.tab_5.setObjectName(_fromUtf8("tab_5"))
+        self.plainTextEdit_5 = QtGui.QPlainTextEdit(self.tab_5)
+        self.plainTextEdit_5.setGeometry(QtCore.QRect(0, 0, 851, 251))
+        self.plainTextEdit_5.setPlainText(_fromUtf8(""))
+        self.plainTextEdit_5.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
+        self.plainTextEdit_5.setObjectName(_fromUtf8("plainTextEdit_5"))
+        self.tabWidget.addTab(self.tab_5, _fromUtf8(""))
         ETMITM.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(ETMITM)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 879, 26))
@@ -170,12 +188,15 @@ class Ui_ETMITM(object):
         ETMITM.setMenuBar(self.menubar)
 
         self.retranslateUi(ETMITM)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL(_fromUtf8("clicked()")), ETMITM.close)
         QtCore.QObject.connect(self.pushButton_7, QtCore.SIGNAL(_fromUtf8("clicked()")), ETMITM.close)
         QtCore.QMetaObject.connectSlotsByName(ETMITM)
 
     def retranslateUi(self, ETMITM):
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("ETMITM", "Tab 1", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("ETMITM", "Tab 2", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("ETMITM", "Main Log", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("ETMITM", "Ettercap Output", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.urlsnarf), QtGui.QApplication.translate("ETMITM", "urlsnarf Output", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QtGui.QApplication.translate("ETMITM", "sslstrip Output", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), QtGui.QApplication.translate("ETMITM", "airbase-ng Output", None, QtGui.QApplication.UnicodeUTF8))
 
