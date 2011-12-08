@@ -3,6 +3,7 @@ from PyQt4 import QtCore, QtGui
 from main_ui import Ui_ETMITM 
 
 #global variables
+pp = subprocess.Popen
 myos="ubuntu/backtrack"
 depend={
         'dhcp3':{'conf':'/etc/dhcp3/dhcpcd.conf', 'name':'dhcp3', 'type':'dhcpd'},
@@ -32,11 +33,13 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.setupUi(self)
 #        QtCore.QObject.connect(self.ui.button_open, QtCore.SIGNAL("clicked()"), self.method)
         QtCore.QObject.connect(self.ui.pushButton_3, QtCore.SIGNAL("clicked()"), self.checkDepend)
+        QtCore.QObject.connect(self.ui.pushButton, QtCore.SIGNAL('clicked()'), self.installStuff)
+        QtCore.QObject.connect(self.ui.pushButton_4, QtCore.SIGNAL('clicked()'), self.startAttack)
+
 
 
     def checkDepend(self):
         # check for arch:
-        pp = subprocess.Popen
         p = pp(['uname', '-a'], stdout=subprocess.PIPE)
         out,err = p.communicate()
         global myos
@@ -45,17 +48,21 @@ class StartQT4(QtGui.QMainWindow):
         self.ui.plainTextEdit.insertPlainText(stout)
         # check required programs
         self.lookAtDepend()
+
+    def installStuff(self):
         global toInstall
+        self.ui.plainTextEdit.insertPlainText("trying to install %d dependancies\n"%len(toInstall))
         # begin installing stuff
         if myos == 'arch':
             for i in toInstall:
+                self.ui.plainTextEdit.insertPlainText("installing " + i + "\n")
                 p = pp(['yaourt', i])
                 p.wait()
         else:
             for i in toInstall:
+                self.ui.plainTextEdit.insertPlainText("installing " + i + "\n")
                 p = pp(['apt-get install', i])
                 p.wait()
-        pass
 
     def lookAtDepend(self):
         global depend
@@ -78,6 +85,39 @@ class StartQT4(QtGui.QMainWindow):
                 self.ui.plainTextEdit.insertPlainText("not found.\n")
                 pass
 
+    def startAttack(self):
+        global depend
+        for a in depend.keys():
+            if depend[a]=='':
+                self.ui.plainTextEdit.insertPlainText("please install dependancies before attempting attack\n")
+                return
+        self.checkdhcpdconf()
+
+    def checkdhcpdconf(self):
+        mainLog = self.ui.plainTextEdit.insertPlainText
+        global depend
+        reply = QtGui.QMessageBox.question(self,'add conf settings?', 'Would you like me to add the required settings to dhcpd.conf?', QtGui.QMessageBox.Yes | QtGui.QMessageBox.No, QtGui.QMessageBox.No)
+        if reply == QtGui.QMessageBox.Yes:
+            self.ui.plainTextEdit.insertPlainText("setting up dhcpd.conf\n")
+            gerp = pp(['grep', self.ui.lineEdit_4.text(), depend['dhcpd']['conf']],stdout=subprocess.PIPE)
+            out, err = gerp.communicate()
+            if out:
+                self.ui.plainTextEdit.insertPlainText("current settings may already exist, please edit %s and select 'No' next time you are asked to modify dhcpd.conf\n"%depend['dhcpd']['conf'])
+                return
+            else:
+                dhcpdconfile = file(depend['dhcpd']['conf'],'r')
+                mainLog('creating backup of dhcpd.conf...\n')
+                file('dhcpd.conf.bak', 'w').write(dhcpdconfile.read())
+                dhcpdconfile.close()
+                dhcpdconfile = file(depend['dhcpd']['conf'],'a')
+                dhcpdconfile.write("option domain-name-servers %s;\n"%self.ui.lineEdit_4.text())
+                dhcpdconfile.write("subnet %s netmask %s{\n"%(self.ui.lineEdit_5.text(),self.ui.lineEdit_6.text()))
+                dhcpdconfile.write("range %s %s;\n"%(self.ui.lineEdit_7.text(), self.ui.lineEdit_9.text()))
+                dhcpdconfile.write("option routers %s;\n"%self.ui.lineEdit_8.text())
+                dhcpdconfile.write("option domain-name-servers %s;\n"%self.ui.lineEdit_4.text())
+                dhcpdconfile.write("}\n")
+        else:
+            pass
 
 
 
